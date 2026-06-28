@@ -349,6 +349,13 @@
     .auth-btn{border:1px solid var(--border);background:#fff;color:var(--dark);border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;font-family:inherit}
     .auth-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
     .auth-user{font-size:13px;color:var(--green);font-weight:700;margin-top:10px;display:none}
+    .auth-dashboard{display:none;margin-top:12px;padding:12px;border-radius:12px;background:#fff;border:1px dashed var(--border)}
+    .auth-dashboard.show{display:block}
+    .auth-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .auth-pill{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);border-radius:999px;padding:6px 10px;font-weight:800;font-size:12px}
+    .auth-small{font-size:12px;color:var(--gray);line-height:1.5;margin-top:8px}
+    .auth-actions.logged-in #googleLoginBtn,.auth-actions.logged-in #emailSignupBtn,.auth-actions.logged-in #emailLoginBtn{display:none}
+    .auth-help{font-size:12px;color:var(--gray);margin-top:10px;line-height:1.5}
 
     .form-submit {
       grid-column: 1/-1;
@@ -852,14 +859,24 @@
       <div class="form-grid">
         <div class="auth-box">
           <div class="auth-title">Seller Account Login</div>
-          <div class="auth-note">Business submit করার আগে mobile number দিয়ে seller account create/login করুন। আপনার mobile number Firebase Auth-এ secure email format হিসেবে save হবে।</div>
-          <div class="auth-actions">
+          <div class="auth-note">Business submit করার আগে seller account create/login করুন। Google অথবা Mobile login—দুটোই Firebase Authentication দিয়ে secure থাকবে।</div>
+          <div class="auth-actions" id="authActions">
             <button class="auth-btn primary" type="button" id="googleLoginBtn">🔐 Continue with Google</button>
             <button class="auth-btn" type="button" id="emailSignupBtn">📱 Create Mobile Account</button>
             <button class="auth-btn" type="button" id="emailLoginBtn">Login with Mobile</button>
             <button class="auth-btn" type="button" id="logoutBtn" style="display:none">Logout</button>
           </div>
           <div class="auth-user" id="authUserBox"></div>
+          <div class="auth-dashboard" id="sellerDashboard">
+            <div class="auth-row">
+              <div>
+                <div class="auth-pill">✅ Seller Logged In</div>
+                <div class="auth-small" id="sellerInfoText">Your account is ready.</div>
+              </div>
+              <div class="auth-small">Business submit করলে Owner UID, Email/Mobile Firestore-এ auto save হবে।</div>
+            </div>
+          </div>
+          <div class="auth-help" id="authHelpText">🔒 Login করলে আপনার business listing secure seller account-এর সাথে যুক্ত হবে।</div>
         </div>
         <div class="form-group">
           <label>Business Name *</label>
@@ -1067,16 +1084,35 @@
     box.textContent = msg;
   }
 
+  function getProviderName(user){
+    const id = user?.providerData?.[0]?.providerId || '';
+    if (id.includes('google')) return 'Google';
+    if (id.includes('password')) return 'Mobile';
+    return 'Firebase';
+  }
+
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
     const logoutBtn = document.getElementById('logoutBtn');
+    const actions = document.getElementById('authActions');
+    const dash = document.getElementById('sellerDashboard');
+    const info = document.getElementById('sellerInfoText');
+    const help = document.getElementById('authHelpText');
     if (user) {
-      showAuthStatus(`Logged in: ${formatSellerLogin(user.email) || user.displayName || user.uid}`);
+      const loginText = formatSellerLogin(user.email) || user.displayName || user.uid;
+      showAuthStatus(`Logged in with ${getProviderName(user)}: ${loginText}`);
       if(logoutBtn) logoutBtn.style.display = 'inline-block';
+      if(actions) actions.classList.add('logged-in');
+      if(dash) dash.classList.add('show');
+      if(info) info.textContent = `${loginText} • UID connected`;
+      if(help) help.textContent = '✅ এখন আপনি business listing submit করতে পারবেন।';
     } else {
       const box = document.getElementById('authUserBox');
       if(box) box.style.display = 'none';
       if(logoutBtn) logoutBtn.style.display = 'none';
+      if(actions) actions.classList.remove('logged-in');
+      if(dash) dash.classList.remove('show');
+      if(help) help.textContent = '🔒 Login করলে আপনার business listing secure seller account-এর সাথে যুক্ত হবে।';
     }
   });
 
@@ -1084,7 +1120,12 @@
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (e) {
-      showAuthStatus('Google provider Firebase Console থেকে Enable করুন, তারপর আবার চেষ্টা করুন।', false);
+      let msg = 'Google Login করা যায়নি। আবার চেষ্টা করুন।';
+      if (e.code === 'auth/unauthorized-domain') msg = 'এই website domain Firebase Authorized domains-এ add করা নেই।';
+      if (e.code === 'auth/popup-closed-by-user') msg = 'Google popup বন্ধ হয়েছে। আবার Continue with Google চাপুন।';
+      if (e.code === 'auth/operation-not-allowed') msg = 'Google provider Firebase Authentication-এ enable নেই।';
+      if (e.code === 'auth/configuration-not-found') msg = 'Firebase Auth configuration check করুন।';
+      showAuthStatus(msg, false);
       console.error(e);
     }
   });
@@ -1156,11 +1197,23 @@
       submittedAt: serverTimestamp(),
       ownerUid: currentUser ? currentUser.uid : null,
       ownerEmail: currentUser ? (currentUser.email || '') : '',
-      ownerMobile: currentUser && currentUser.email ? currentUser.email.replace('@connectbazar.in','') : ''
+      ownerMobile: currentUser && currentUser.email && currentUser.email.endsWith('@connectbazar.in') ? currentUser.email.replace('@connectbazar.in','') : dataMobileOnly(),
+      loginProvider: currentUser ? getProviderName(currentUser) : ''
     };
+
+    function dataMobileOnly(){
+      return (document.querySelectorAll('.form-grid input')[2]?.value || '').replace(/\D/g,'').slice(-10);
+    }
 
     const statusBox = document.getElementById('formStatus');
     statusBox.className = 'form-status';
+
+    if (!currentUser) {
+      statusBox.textContent = 'Business submit করার আগে Google অথবা Mobile দিয়ে login করুন।';
+      statusBox.classList.add('err');
+      document.getElementById('authUserBox')?.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
 
     if (!data.businessName || !data.mobile || !data.category || !data.city) {
       statusBox.textContent = 'Business name, mobile number, category এবং city দিন।';
