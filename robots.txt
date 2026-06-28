@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /cb-admin-9x7k/
+Allow: /
+Sitemap: https://connectbazar.in/sitemap.xml
