@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – ConnectBazar.in</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{--blue:#1a6bfa;--blue2:#0f4fd6;--orange:#ff6b2b;--dark:#0d1117;--gray:#64748b;--border:#e2e8f4;--light:#f8faff;--green:#00a86b;--red:#e53e3e;--shadow:0 18px 60px rgba(15,30,80,.14)}
+    *{box-sizing:border-box;margin:0;padding:0} body{font-family:Inter,Arial,sans-serif;min-height:100vh;background:linear-gradient(135deg,#eef5ff 0%,#fff7f2 50%,#ffffff 100%);display:grid;place-items:center;color:var(--dark);padding:22px}
+    .card{width:min(980px,100%);display:grid;grid-template-columns:1.05fr .95fr;background:#fff;border:1px solid var(--border);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+    .left{padding:48px;background:linear-gradient(160deg,#0d5df2,#3b8cff);color:#fff;position:relative;overflow:hidden}.left:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.13);right:-80px;bottom:-80px}.logo{display:flex;align-items:center;gap:12px;font-family:'Plus Jakarta Sans';font-weight:800;font-size:25px}.mark{width:46px;height:46px;border-radius:14px;background:#fff;color:var(--blue);display:grid;place-items:center;font-weight:900}.left h1{font-family:'Plus Jakarta Sans';font-size:42px;line-height:1.08;margin:54px 0 16px;letter-spacing:-1.5px}.left p{font-size:16px;line-height:1.7;opacity:.92;max-width:430px}.points{display:grid;gap:13px;margin-top:32px}.point{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.13);padding:12px 14px;border-radius:14px;font-weight:700;font-size:14px}
+    .right{padding:42px}.badge{display:inline-flex;background:#fff1eb;color:#b94713;padding:8px 12px;border-radius:999px;font-weight:800;font-size:13px;margin-bottom:18px}.right h2{font-family:'Plus Jakarta Sans';font-size:30px;margin-bottom:8px}.sub{color:var(--gray);line-height:1.6;margin-bottom:24px}.tabs{display:flex;gap:10px;margin-bottom:18px}.tab{flex:1;padding:12px;border:1px solid var(--border);background:#fff;border-radius:13px;font-weight:800;cursor:pointer}.tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+    .btn{width:100%;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:15px;cursor:pointer;margin:8px 0;font-family:inherit}.google{background:var(--blue);color:#fff}.google:hover{background:var(--blue2)}.mobile{background:#fff;color:var(--dark);border:1px solid var(--border)}.primary{background:var(--dark);color:#fff}.field{margin:12px 0}.field label{display:block;font-weight:800;font-size:13px;margin-bottom:7px}.field input{width:100%;padding:14px 15px;border:1px solid var(--border);border-radius:14px;font-size:15px;outline:none}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(26,107,250,.10)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hint{font-size:13px;color:var(--gray);line-height:1.5;margin:12px 0}.status{display:none;margin-top:14px;padding:12px 14px;border-radius:13px;font-weight:700;font-size:14px}.ok{display:block;background:#e6f9f2;color:#05784f}.err{display:block;background:#fff1f1;color:var(--red)}.footer{margin-top:22px;text-align:center;color:var(--gray);font-size:13px}.hidden{display:none!important}@media(max-width:760px){.card{grid-template-columns:1fr}.left{padding:30px}.left h1{font-size:32px;margin:28px 0 12px}.right{padding:28px}.row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <section class="left">
+      <div class="logo"><div class="mark">CB</div><span>ConnectBazar.in</span></div>
+      <h1>Login first, then open main website</h1>
+      <p>Seller account secure Firebase Authentication দিয়ে চলবে। Login successful হলে main marketplace auto open হবে।</p>
+      <div class="points"><div class="point">✅ Google Login Ready</div><div class="point">✅ Mobile Number Login</div><div class="point">✅ Seller UID Firestore Safe</div></div>
+    </section>
+    <section class="right">
+      <span class="badge">Seller Login</span>
+      <h2>Welcome back</h2>
+      <p class="sub">Business listing submit করার আগে Google অথবা Mobile দিয়ে login করুন।</p>
+      <button id="googleBtn" class="btn google">🔐 Continue with Google</button>
+      <div class="tabs"><button id="loginTab" class="tab active">Login</button><button id="signupTab" class="tab">Create Account</button></div>
+      <div class="row"><div class="field"><label>Mobile Number</label><input id="mobile" type="tel" maxlength="10" placeholder="9735474770" /></div><div class="field"><label>Password</label><input id="password" type="password" placeholder="Minimum 6 characters" /></div></div>
+      <button id="mobileBtn" class="btn primary">📱 Login with Mobile</button>
+      <p class="hint">Mobile number Firebase Auth-এ secure email format হিসেবে save হবে, যেমন <b>9735474770@connectbazar.in</b></p>
+      <div id="status" class="status"></div>
+      <p class="footer">© 2026 ConnectBazar.in — Local Business Marketplace</p>
+    </section>
+  </main>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+  const firebaseConfig = { apiKey: "AIzaSyBxXP8asrvUVPxWUBQ3NFhVW38UGeFTKZ8", authDomain: "connectbazar-893fc.firebaseapp.com", projectId: "connectbazar-893fc", storageBucket: "connectbazar-893fc.firebasestorage.app", messagingSenderId: "908554431469", appId: "1:908554431469:web:6ad9cfc134431b2af255e4", measurementId: "G-EBGY7XJVF9" };
+  const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); let mode='login';
+  const $=id=>document.getElementById(id); const status=$('status');
+  function show(msg, ok=false){status.className='status '+(ok?'ok':'err');status.textContent=msg;}
+  function toEmail(m){const d=String(m||'').replace(/\D/g,'').slice(-10);return d.length===10?`${d}@connectbazar.in`:''}
+  onAuthStateChanged(auth,user=>{ if(user) window.location.href='index.html'; });
+  $('loginTab').onclick=()=>{mode='login';$('loginTab').classList.add('active');$('signupTab').classList.remove('active');$('mobileBtn').textContent='📱 Login with Mobile'};
+  $('signupTab').onclick=()=>{mode='signup';$('signupTab').classList.add('active');$('loginTab').classList.remove('active');$('mobileBtn').textContent='📱 Create Mobile Account'};
+  $('googleBtn').onclick=async()=>{try{await signInWithPopup(auth,provider);show('Login successful. Main website opening...',true)}catch(e){let m='Google login failed. Try again.'; if(e.code==='auth/unauthorized-domain')m='Domain Firebase Authorized domains-এ add করা নেই।'; if(e.code==='auth/popup-closed-by-user')m='Popup বন্ধ হয়েছে। আবার চেষ্টা করুন।'; if(e.code==='auth/operation-not-allowed')m='Google provider enable নেই।'; show(m,false); console.error(e)}};
+  $('mobileBtn').onclick=async()=>{const email=toEmail($('mobile').value);const pass=$('password').value;if(!email)return show('সঠিক 10 digit mobile number দিন।'); if(pass.length<6)return show('Password কমপক্ষে 6 characters দিন।'); try{ if(mode==='signup') await createUserWithEmailAndPassword(auth,email,pass); else await signInWithEmailAndPassword(auth,email,pass); show('Success. Main website opening...',true); }catch(e){let m=e.message; if(e.code==='auth/email-already-in-use')m='এই mobile account আগে থেকেই আছে। Login করুন।'; if(['auth/invalid-credential','auth/user-not-found','auth/wrong-password'].includes(e.code))m='Mobile অথবা password ভুল। Account না থাকলে Create Account করুন।'; show(m,false); console.error(e)}};
+</script>
+</body>
+</html>
