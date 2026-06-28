@@ -489,12 +489,6 @@
       .section-title { font-size: 26px; }
     }
   </style>
-
-  <style id="login-gate-style">
-    #loginGateOverlay{position:fixed;inset:0;z-index:99999;background:#ffffff;display:grid;place-items:center;font-family:Inter,Arial,sans-serif;color:#0d1117}
-    #loginGateOverlay .box{padding:24px;text-align:center;border:1px solid #e2e8f4;border-radius:18px;box-shadow:0 12px 40px rgba(15,30,80,.10)}
-    #loginGateOverlay b{display:block;font-size:20px;margin-bottom:8px}
-  </style>
 </head>
 <body>
 
@@ -1099,12 +1093,6 @@
 
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
-    const gate = document.getElementById('loginGateOverlay');
-    if (!user) {
-      window.location.href = 'login.html';
-      return;
-    }
-    if (gate) gate.style.display = 'none';
     const logoutBtn = document.getElementById('logoutBtn');
     const actions = document.getElementById('authActions');
     const dash = document.getElementById('sellerDashboard');
@@ -1187,7 +1175,7 @@
 
   document.getElementById('emailSignupBtn')?.addEventListener('click', () => askEmailPassword('signup'));
   document.getElementById('emailLoginBtn')?.addEventListener('click', () => askEmailPassword('login'));
-  document.getElementById('logoutBtn')?.addEventListener('click', async () => { await signOut(auth); window.location.href = 'login.html'; });
+  document.getElementById('logoutBtn')?.addEventListener('click', () => signOut(auth));
 
   // Form submit
   document.querySelector('.form-submit').addEventListener('click', async () => {
