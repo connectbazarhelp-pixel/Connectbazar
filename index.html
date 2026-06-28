@@ -341,6 +341,15 @@
     .form-group.full { grid-column: 1/-1; }
     .form-group textarea { min-height: 90px; resize: vertical; }
     .form-group select { appearance: none; cursor: pointer; }
+
+    .auth-box{grid-column:1/-1;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:8px}
+    .auth-title{font-weight:800;color:var(--dark);margin-bottom:6px}
+    .auth-note{font-size:13px;color:var(--gray);line-height:1.55;margin-bottom:12px}
+    .auth-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .auth-btn{border:1px solid var(--border);background:#fff;color:var(--dark);border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;font-family:inherit}
+    .auth-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .auth-user{font-size:13px;color:var(--green);font-weight:700;margin-top:10px;display:none}
+
     .form-submit {
       grid-column: 1/-1;
       padding: 14px;
@@ -415,6 +424,20 @@
     .footer-logo-text { color: #e2e8f0; }
     .footer-logo-text span { color: var(--orange); }
 
+
+    .search-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:18px;margin-top:-38px;position:relative;z-index:5;display:grid;grid-template-columns:1.2fr 1fr auto;gap:12px;align-items:center}
+    .search-panel input,.search-panel select{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;outline:none}
+    .search-panel input:focus,.search-panel select:focus{border-color:var(--blue)}
+    .notice-strip{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:var(--radius);padding:12px 16px;font-size:14px;font-weight:600;margin-bottom:22px;line-height:1.5}
+    .dynamic-note{font-size:13px;color:var(--gray);margin-top:14px;text-align:center}
+    .seller-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+    .seller-tool{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)}
+    .seller-tool b{display:block;margin-bottom:6px;color:var(--dark)}
+    .seller-tool span{font-size:13px;color:var(--gray);line-height:1.55}
+    .form-status{grid-column:1/-1;font-size:13px;font-weight:700;display:none;padding:10px 12px;border-radius:var(--radius-sm)}
+    .form-status.ok{display:block;background:var(--green-light);color:var(--green)}
+    .form-status.err{display:block;background:#fee2e2;color:#b91c1c}
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       nav { display: none; }
@@ -439,6 +462,8 @@
       .features-grid { grid-template-columns: 1fr 1fr; }
       .register-grid { grid-template-columns: 1fr; gap: 40px; }
       .plans-grid { grid-template-columns: 1fr; }
+      .search-panel { grid-template-columns: 1fr; margin-top: 0; }
+      .seller-tools { grid-template-columns: 1fr; }
       .faqs-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr; gap: 28px; }
       .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
@@ -470,6 +495,7 @@
     <nav>
       <a href="#categories">Categories</a>
       <a href="#businesses">Businesses</a>
+      <a href="#seller-tools">Seller Tools</a>
       <a href="#features">Features</a>
       <a href="#plans">Plans</a>
       <a href="#faqs">FAQs</a>
@@ -480,6 +506,7 @@
   <div class="mobile-nav" id="mobileNav">
     <a href="#categories" onclick="closeMenu()">Categories</a>
     <a href="#businesses" onclick="closeMenu()">Businesses</a>
+    <a href="#seller-tools" onclick="closeMenu()">Seller Tools</a>
     <a href="#features" onclick="closeMenu()">Features</a>
     <a href="#plans" onclick="closeMenu()">Plans</a>
     <a href="#faqs" onclick="closeMenu()">FAQs</a>
@@ -572,6 +599,18 @@
   </div>
 </section>
 
+<!-- SEARCH PANEL -->
+<div class="wrap">
+  <div class="search-panel" id="searchPanel">
+    <input id="bizSearch" type="search" placeholder="Search business name, service or city..." />
+    <select id="catFilter">
+      <option value="">All Categories</option>
+      <option>Doctor / Clinic</option><option>Copier Service</option><option>Mobile Shop</option><option>CSC Service</option><option>Electrician</option><option>Restaurant</option><option>Tutor / Coaching</option><option>Grocery Store</option><option>Other</option>
+    </select>
+    <button class="btn-primary" type="button" onclick="filterBusinesses()">Search</button>
+  </div>
+</div>
+
 <!-- STATS BAR -->
 <div class="stats-bar">
   <div class="wrap stats-inner">
@@ -663,7 +702,8 @@
       <h2 class="section-title">Trusted Local Businesses</h2>
       <p class="section-sub">Verified and reviewed businesses from your community — ready to serve you.</p>
     </div>
-    <div class="biz-grid">
+    <div class="notice-strip">✅ Firebase connection is active. Approved businesses from admin panel will appear here automatically.</div>
+    <div class="biz-grid" id="bizGrid">
       <div class="biz-card">
         <div class="biz-banner b1">🖨️</div>
         <div class="biz-body">
@@ -712,6 +752,23 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="dynamic-note" id="dynamicNote">Showing sample listings now. Approved Firebase listings will load automatically.</div>
+  </div>
+</section>
+
+<!-- SELLER TOOLS -->
+<section id="seller-tools" class="cats-bg">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="section-label">Seller Tools</div>
+      <h2 class="section-title">Business owner dashboard features</h2>
+      <p class="section-sub">ConnectBazar is ready for free registration, verification, leads and premium listing upgrades.</p>
+    </div>
+    <div class="seller-tools">
+      <div class="seller-tool"><b>✅ Admin Verification</b><span>New businesses stay pending until admin approves them.</span></div>
+      <div class="seller-tool"><b>📞 Lead Tracking</b><span>Call and WhatsApp clicks are saved in Firebase leads collection.</span></div>
+      <div class="seller-tool"><b>⭐ Premium Ready</b><span>Featured listing, marketing plan and badge system are ready for upgrade.</span></div>
     </div>
   </div>
 </section>
@@ -793,6 +850,17 @@
     <div class="form-card">
       <h3>Register Your Business</h3>
       <div class="form-grid">
+        <div class="auth-box">
+          <div class="auth-title">Seller Account Login</div>
+          <div class="auth-note">Business submit করার আগে seller account login করলে owner UID Firebase-এ save হবে। Email/Password enabled আছে, Google Login enable করলে Google button-ও কাজ করবে।</div>
+          <div class="auth-actions">
+            <button class="auth-btn primary" type="button" id="googleLoginBtn">🔐 Continue with Google</button>
+            <button class="auth-btn" type="button" id="emailSignupBtn">✉️ Create Email Account</button>
+            <button class="auth-btn" type="button" id="emailLoginBtn">Login with Email</button>
+            <button class="auth-btn" type="button" id="logoutBtn" style="display:none">Logout</button>
+          </div>
+          <div class="auth-user" id="authUserBox"></div>
+        </div>
         <div class="form-group">
           <label>Business Name *</label>
           <input type="text" placeholder="e.g. Tech CND Copier Solution" />
@@ -826,12 +894,29 @@
         </div>
         <div class="form-group">
           <label>City / Area *</label>
-          <input type="text" placeholder="e.g. Patna, Bihar" />
+          <input type="text" placeholder="e.g. Dubrajpur, Birbhum" />
+        </div>
+        <div class="form-group">
+          <label>Full Address</label>
+          <input type="text" placeholder="Shop address / landmark" />
+        </div>
+        <div class="form-group">
+          <label>Pincode</label>
+          <input type="text" placeholder="731123" />
         </div>
         <div class="form-group full">
           <label>Business Description</label>
           <textarea placeholder="Describe your services, specialisations and experience…"></textarea>
         </div>
+        <div class="form-group full">
+          <label>Plan</label>
+          <select>
+            <option>Free Listing</option>
+            <option>Featured Listing</option>
+            <option>Marketing Support</option>
+          </select>
+        </div>
+        <div class="form-status" id="formStatus"></div>
         <button class="form-submit" type="button">Submit Free Listing →</button>
       </div>
     </div>
@@ -955,7 +1040,8 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBxXP8asrvUVPxWUBQ3NFhVW38UGeFTKZ8",
@@ -969,6 +1055,57 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+  let currentUser = null;
+
+  function showAuthStatus(msg, ok=true){
+    const box = document.getElementById('authUserBox');
+    if(!box) return;
+    box.style.display = 'block';
+    box.style.color = ok ? 'var(--green)' : '#e53e3e';
+    box.textContent = msg;
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (user) {
+      showAuthStatus(`Logged in: ${user.email || user.displayName || user.uid}`);
+      if(logoutBtn) logoutBtn.style.display = 'inline-block';
+    } else {
+      const box = document.getElementById('authUserBox');
+      if(box) box.style.display = 'none';
+      if(logoutBtn) logoutBtn.style.display = 'none';
+    }
+  });
+
+  document.getElementById('googleLoginBtn')?.addEventListener('click', async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (e) {
+      showAuthStatus('Google provider Firebase Console থেকে Enable করুন, তারপর আবার চেষ্টা করুন।', false);
+      console.error(e);
+    }
+  });
+
+  async function askEmailPassword(mode){
+    const email = prompt('Seller email দিন:');
+    if(!email) return;
+    const password = prompt('Password দিন — minimum 6 characters:');
+    if(!password) return;
+    try {
+      if(mode === 'signup') await createUserWithEmailAndPassword(auth, email, password);
+      else await signInWithEmailAndPassword(auth, email, password);
+    } catch(e) {
+      showAuthStatus(e.message || 'Authentication error', false);
+      console.error(e);
+    }
+  }
+
+  document.getElementById('emailSignupBtn')?.addEventListener('click', () => askEmailPassword('signup'));
+  document.getElementById('emailLoginBtn')?.addEventListener('click', () => askEmailPassword('login'));
+  document.getElementById('logoutBtn')?.addEventListener('click', () => signOut(auth));
 
   // Form submit
   document.querySelector('.form-submit').addEventListener('click', async () => {
@@ -980,13 +1117,24 @@
       whatsapp: inputs[3].value.trim(),
       category: inputs[4].value,
       city: inputs[5].value.trim(),
-      description: inputs[6].value.trim(),
+      address: inputs[6].value.trim(),
+      pincode: inputs[7].value.trim(),
+      description: inputs[8].value.trim(),
+      plan: inputs[9].value,
+      verified: false,
+      featured: false,
       status: 'pending',
-      submittedAt: serverTimestamp()
+      submittedAt: serverTimestamp(),
+      ownerUid: currentUser ? currentUser.uid : null,
+      ownerEmail: currentUser ? (currentUser.email || '') : ''
     };
 
-    if (!data.businessName || !data.mobile || !data.category) {
-      alert('Business name, mobile number এবং category দিন।');
+    const statusBox = document.getElementById('formStatus');
+    statusBox.className = 'form-status';
+
+    if (!data.businessName || !data.mobile || !data.category || !data.city) {
+      statusBox.textContent = 'Business name, mobile number, category এবং city দিন।';
+      statusBox.classList.add('err');
       return;
     }
 
@@ -998,30 +1146,82 @@
       await addDoc(collection(db, 'businesses'), data);
       btn.textContent = '✓ Submitted! We will review within 24 hours.';
       btn.style.background = '#00a86b';
-      inputs.forEach(i => i.value = '');
+      statusBox.textContent = 'Submitted successfully. Admin approval হলে listing public হবে।';
+      statusBox.classList.add('ok');
+      inputs.forEach((i,idx) => { if(idx !== 9) i.value = ''; });
     } catch (e) {
       btn.textContent = 'Error! Try again.';
       btn.style.background = '#e53e3e';
       btn.disabled = false;
+      statusBox.textContent = 'Firebase submit error. Console check করুন।';
+      statusBox.classList.add('err');
       console.error(e);
     }
   });
 
-  // Track Call/WhatsApp clicks
-  document.querySelectorAll('.biz-btn.call, .biz-btn.wa').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      const card = e.target.closest('.biz-card');
-      const bizName = card.querySelector('.biz-name')?.textContent || 'Unknown';
-      const type = e.target.classList.contains('call') ? 'call' : 'whatsapp';
-      try {
-        await addDoc(collection(db, 'leads'), {
-          business: bizName,
-          type,
-          time: serverTimestamp()
-        });
-      } catch(err) {}
+  attachLeadTracking();
+
+
+  async function loadApprovedBusinesses() {
+    const grid = document.getElementById('bizGrid');
+    const note = document.getElementById('dynamicNote');
+    if (!grid) return;
+    try {
+      const q = query(collection(db, 'businesses'), where('status', '==', 'approved'));
+      const snap = await getDocs(q);
+      if (snap.empty) return;
+      const businesses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      grid.innerHTML = businesses.map((b, i) => {
+        const wa = (b.whatsapp || b.mobile || '').replace(/\D/g,'');
+        const phone = (b.mobile || '').replace(/\s/g,'');
+        const icon = b.category?.includes('Copier') ? '🖨️' : b.category?.includes('Mobile') ? '📱' : b.category?.includes('Doctor') ? '🏥' : b.category?.includes('CSC') ? '🧾' : '🏪';
+        return `<div class="biz-card" data-name="${(b.businessName||'').toLowerCase()}" data-city="${(b.city||'').toLowerCase()}" data-category="${b.category||''}">
+          <div class="biz-banner b${(i%4)+1}">${icon}</div>
+          <div class="biz-body">
+            <div class="biz-verified">✓ Verified</div>
+            <div class="biz-name">${b.businessName || '-'}</div>
+            <div class="biz-desc">${b.description || b.category || 'Local business listed on ConnectBazar.'}<br><b>${b.city || ''}</b></div>
+            <div class="biz-actions">
+              <a class="biz-btn call" href="tel:${phone}">📞 Call Now</a>
+              <a class="biz-btn wa" href="https://wa.me/91${wa.slice(-10)}">💬 WhatsApp</a>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+      note.textContent = `${businesses.length} approved Firebase listing loaded.`;
+      attachLeadTracking();
+    } catch (err) {
+      console.warn('Approved listing load failed:', err);
+    }
+  }
+
+  window.filterBusinesses = function() {
+    const search = (document.getElementById('bizSearch')?.value || '').toLowerCase();
+    const cat = document.getElementById('catFilter')?.value || '';
+    document.querySelectorAll('#bizGrid .biz-card').forEach(card => {
+      const text = `${card.dataset.name || ''} ${card.dataset.city || ''} ${card.innerText.toLowerCase()}`;
+      const okSearch = !search || text.includes(search);
+      const okCat = !cat || card.dataset.category === cat || card.innerText.includes(cat);
+      card.style.display = okSearch && okCat ? '' : 'none';
     });
-  });
+  };
+
+  function attachLeadTracking() {
+    document.querySelectorAll('.biz-btn.call, .biz-btn.wa').forEach(btn => {
+      if (btn.dataset.tracked) return;
+      btn.dataset.tracked = 'yes';
+      btn.addEventListener('click', async (e) => {
+        const card = e.target.closest('.biz-card');
+        const bizName = card.querySelector('.biz-name')?.textContent || 'Unknown';
+        const type = e.target.classList.contains('call') ? 'call' : 'whatsapp';
+        try {
+          await addDoc(collection(db, 'leads'), { business: bizName, type, time: serverTimestamp() });
+        } catch(err) {}
+      });
+    });
+  }
+
+  loadApprovedBusinesses();
 
   // Mobile menu
   window.toggleMenu = () => document.getElementById('mobileNav').classList.toggle('open');
