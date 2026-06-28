@@ -502,12 +502,14 @@
     <nav>
       <a href="#categories">Categories</a>
       <a href="#businesses">Businesses</a>
+      <a href="dashboard.html">Dashboard</a>
       <a href="#seller-tools">Seller Tools</a>
       <a href="#features">Features</a>
       <a href="#plans">Plans</a>
       <a href="#faqs">FAQs</a>
     </nav>
-    <a href="#register" class="btn-primary">Add Your Business</a>
+    <a href="dashboard.html" class="btn-primary" id="profileBtn" style="display:none;background:#0d1117">Dashboard</a>
+      <a href="#register" class="btn-primary">Add Your Business</a>
     <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
   </div>
   <div class="mobile-nav" id="mobileNav">
@@ -1098,21 +1100,18 @@
     const dash = document.getElementById('sellerDashboard');
     const info = document.getElementById('sellerInfoText');
     const help = document.getElementById('authHelpText');
+    const profileBtn = document.getElementById('profileBtn');
     if (user) {
       const loginText = formatSellerLogin(user.email) || user.displayName || user.uid;
       showAuthStatus(`Logged in with ${getProviderName(user)}: ${loginText}`);
+      if(profileBtn){ profileBtn.style.display='inline-flex'; profileBtn.textContent = '👤 Dashboard'; }
       if(logoutBtn) logoutBtn.style.display = 'inline-block';
       if(actions) actions.classList.add('logged-in');
       if(dash) dash.classList.add('show');
       if(info) info.textContent = `${loginText} • UID connected`;
       if(help) help.textContent = '✅ এখন আপনি business listing submit করতে পারবেন।';
     } else {
-      const box = document.getElementById('authUserBox');
-      if(box) box.style.display = 'none';
-      if(logoutBtn) logoutBtn.style.display = 'none';
-      if(actions) actions.classList.remove('logged-in');
-      if(dash) dash.classList.remove('show');
-      if(help) help.textContent = '🔒 Login করলে আপনার business listing secure seller account-এর সাথে যুক্ত হবে।';
+      window.location.href = 'login.html';
     }
   });
 
@@ -1229,7 +1228,7 @@
       await addDoc(collection(db, 'businesses'), data);
       btn.textContent = '✓ Submitted! We will review within 24 hours.';
       btn.style.background = '#00a86b';
-      statusBox.textContent = 'Submitted successfully. Admin approval হলে listing public হবে।';
+      statusBox.textContent = 'Submitted successfully. Admin approval হলে listing public হবে। Dashboard-এ status দেখতে পারবেন।';
       statusBox.classList.add('ok');
       inputs.forEach((i,idx) => { if(idx !== 9) i.value = ''; });
     } catch (e) {

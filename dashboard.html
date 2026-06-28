@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seller Dashboard – ConnectBazar.in</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{--blue:#1a6bfa;--orange:#ff6b2b;--dark:#0d1117;--gray:#64748b;--border:#e2e8f4;--light:#f8faff;--green:#00a86b;--red:#e53e3e;--yellow:#f59e0b;--shadow:0 14px 40px rgba(15,30,80,.10)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#f4f8ff,#fff);color:var(--dark)}a{text-decoration:none;color:inherit}.wrap{width:min(1160px,92%);margin:auto}.top{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:10}.nav{height:70px;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:flex;align-items:center;gap:10px;font-family:'Plus Jakarta Sans';font-weight:900;font-size:22px}.mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--blue),#6aa4ff);display:grid;place-items:center;color:#fff}.brand span span{color:var(--orange)}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;font-family:inherit}.primary{background:var(--blue);color:#fff}.dark{background:var(--dark);color:#fff}.white{background:#fff;border:1px solid var(--border)}.hero{padding:34px 0 22px}.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}.card{background:#fff;border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);padding:24px}.hero h1{font-family:'Plus Jakarta Sans';font-size:34px;letter-spacing:-1px;margin-bottom:8px}.sub{color:var(--gray);line-height:1.6}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.stat{background:var(--light);border:1px solid var(--border);padding:15px;border-radius:16px}.stat b{font-size:24px}.stat span{display:block;color:var(--gray);font-size:13px;margin-top:3px}.profile{display:grid;gap:8px}.profile .avatar{width:60px;height:60px;border-radius:18px;background:#e8f0ff;display:grid;place-items:center;font-size:26px}.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;font-weight:800;font-size:12px}.ok{background:#e6f9f2;color:#05784f}.pending{background:#fff7df;color:#a16207}.bad{background:#fff1f1;color:#be123c}.grid{display:grid;grid-template-columns:1fr;gap:15px;margin-bottom:35px}.biz{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}.biz h3{font-family:'Plus Jakarta Sans';font-size:21px;margin-bottom:6px}.meta{color:var(--gray);font-size:14px;line-height:1.6}.desc{margin-top:9px;line-height:1.55}.biz-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.empty{text-align:center;padding:34px}.empty h2{font-family:'Plus Jakarta Sans';margin-bottom:8px}.loading{padding:25px;text-align:center;color:var(--gray)}.err{background:#fff1f1;color:var(--red);padding:12px 14px;border-radius:12px;font-weight:700}.small{font-size:13px;color:var(--gray)}@media(max-width:760px){.hero-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.biz{grid-template-columns:1fr}.biz-actions{justify-content:flex-start}.hero h1{font-size:28px}.nav{height:auto;padding:12px 0}.actions .btn{padding:10px 12px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap nav"><a class="brand" href="index.html"><div class="mark">CB</div><span>Connect<span>Bazar</span>.in</span></a><div class="actions"><a class="btn white" href="index.html">Main Site</a><a class="btn primary" href="index.html#register">Add Business</a><button class="btn dark" id="logoutBtn">Logout</button></div></div></header>
+<main class="wrap">
+<section class="hero">
+  <div class="hero-grid">
+    <div class="card"><h1>Seller Dashboard</h1><p class="sub">আপনার business listing, approval status, owner UID এবং lead information এক জায়গায় দেখুন। Admin approve করলে listing public website-এ show হবে।</p><div class="stats"><div class="stat"><b id="totalBiz">0</b><span>Total Listings</span></div><div class="stat"><b id="approvedBiz">0</b><span>Approved</span></div><div class="stat"><b id="pendingBiz">0</b><span>Pending</span></div></div></div>
+    <div class="card profile"><div class="avatar">👤</div><b id="userName">Seller Account</b><span class="small" id="userEmail">Checking login...</span><span class="pill ok">Firebase UID Connected</span></div>
+  </div>
+</section>
+<section class="grid" id="list"><div class="loading">Loading your businesses...</div></section>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyBxXP8asrvUVPxWUBQ3NFhVW38UGeFTKZ8",authDomain:"connectbazar-893fc.firebaseapp.com",projectId:"connectbazar-893fc",storageBucket:"connectbazar-893fc.firebasestorage.app",messagingSenderId:"908554431469",appId:"1:908554431469:web:6ad9cfc134431b2af255e4",measurementId:"G-EBGY7XJVF9"};
+const app=initializeApp(firebaseConfig), db=getFirestore(app), auth=getAuth(app); const $=id=>document.getElementById(id);
+function loginText(user){const e=user?.email||'';return e.endsWith('@connectbazar.in')?'Mobile: '+e.replace('@connectbazar.in',''):e||user.uid}
+function pill(status){status=(status||'pending').toLowerCase(); if(status==='approved')return '<span class="pill ok">✅ Approved</span>'; if(status==='rejected')return '<span class="pill bad">❌ Rejected</span>'; return '<span class="pill pending">⏳ Pending Approval</span>'}
+async function loadMine(user){$('userName').textContent=user.displayName||'Seller Account'; $('userEmail').textContent=loginText(user)+' • UID: '+user.uid.slice(0,8)+'...';
+ const list=$('list'); try{const q=query(collection(db,'businesses'),where('ownerUid','==',user.uid)); const snap=await getDocs(q); const arr=snap.docs.map(d=>({id:d.id,...d.data()})); $('totalBiz').textContent=arr.length; $('approvedBiz').textContent=arr.filter(x=>(x.status||'').toLowerCase()==='approved').length; $('pendingBiz').textContent=arr.filter(x=>(x.status||'pending').toLowerCase()==='pending').length; if(!arr.length){list.innerHTML='<div class="card empty"><h2>No business submitted yet</h2><p class="sub">Main site থেকে Add Your Business form submit করুন।</p><br><a class="btn primary" href="index.html#register">Add Your Business</a></div>';return}
+ list.innerHTML=arr.map(b=>`<div class="card biz"><div><h3>${b.businessName||'Untitled Business'}</h3><div>${pill(b.status)}</div><p class="meta">${b.category||'Category'} • ${b.city||'City'} • Mobile: ${b.mobile||'-'} • WhatsApp: ${b.whatsapp||'-'}</p><p class="desc">${b.description||'No description added.'}</p><p class="small">Plan: ${b.plan||'Free'} • Owner UID saved safely</p></div><div class="biz-actions"><a class="btn white" href="tel:${(b.mobile||'').replace(/\s/g,'')}">Call</a><a class="btn white" href="https://wa.me/91${String(b.whatsapp||b.mobile||'').replace(/\D/g,'').slice(-10)}">WhatsApp</a></div></div>`).join('');
+ }catch(e){list.innerHTML='<div class="err">Dashboard load error. Firestore rules বা internet check করুন।</div>'; console.error(e)}}
+onAuthStateChanged(auth,u=>{if(!u){location.href='login.html';return} loadMine(u)});
+$('logoutBtn').onclick=async()=>{await signOut(auth);location.href='login.html'};
+</script>
+</body>
+</html>
