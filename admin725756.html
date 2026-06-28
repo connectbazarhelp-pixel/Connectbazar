@@ -352,7 +352,24 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxXP8asrvUVPxWUBQ3NFhVW38UGeFTKZ8",
+    authDomain: "connectbazar-893fc.firebaseapp.com",
+    projectId: "connectbazar-893fc",
+    storageBucket: "connectbazar-893fc.firebasestorage.app",
+    messagingSenderId: "908554431469",
+    appId: "1:908554431469:web:6ad9cfc134431b2af255e4",
+    measurementId: "G-EBGY7XJVF9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Clock
   function updateTime() {
     const el = document.getElementById('currentTime');
     if (el) el.textContent = new Date().toLocaleString('en-IN', { weekday: 'short', hour: '2-digit', minute: '2-digit' });
@@ -360,32 +377,109 @@
   updateTime();
   setInterval(updateTime, 60000);
 
-  function login() {
+  // Login
+  window.login = function() {
     const pin = document.getElementById('pinInput').value;
     const err = document.getElementById('loginError');
     if (pin === '2026') {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
+      loadDashboard();
     } else {
       err.style.display = 'block';
       document.getElementById('pinInput').value = '';
       document.getElementById('pinInput').focus();
     }
-  }
+  };
 
-  function logout() {
+  window.logout = function() {
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'grid';
     document.getElementById('pinInput').value = '';
     document.getElementById('loginError').style.display = 'none';
-  }
+  };
 
+  // Sidebar nav
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', function() {
       document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
       this.classList.add('active');
     });
   });
+
+  // Load real data from Firestore
+  async function loadDashboard() {
+    // Pending businesses
+    const bizSnap = await getDocs(collection(db, 'businesses'));
+    const allBiz = bizSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const pending = allBiz.filter(b => b.status === 'pending');
+    const approved = allBiz.filter(b => b.status === 'approved');
+
+    // Update stat cards
+    document.querySelector('.stats-row .stat-card:nth-child(1) .stat-card-value').textContent = pending.length;
+
+    // Leads
+    const leadsSnap = await getDocs(collection(db, 'leads'));
+    document.querySelector('.stats-row .stat-card:nth-child(2) .stat-card-value').textContent = leadsSnap.size;
+
+    // Render pending table
+    renderPendingTable(pending);
+
+    // Render recent leads
+    renderLeads(leadsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+  }
+
+  function renderPendingTable(pending) {
+    const tbody = document.querySelector('.content-card.full table tbody');
+    if (!pending.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:24px">No pending businesses</td></tr>';
+      return;
+    }
+    tbody.innerHTML = pending.map(b => `
+      <tr>
+        <td><div class="biz-name-cell">${b.businessName || '-'}</div><div class="biz-cat">${b.category || '-'}</div></td>
+        <td>${b.ownerName || '-'}</td>
+        <td>${b.mobile || '-'}</td>
+        <td>${b.city || '-'}</td>
+        <td style="font-size:12px;color:var(--gray)">${b.submittedAt ? new Date(b.submittedAt.seconds * 1000).toLocaleDateString('en-IN') : 'Just now'}</td>
+        <td>
+          <div class="action-btns">
+            <button class="act-btn act-approve" onclick="approveBiz('${b.id}')">Approve</button>
+            <button class="act-btn act-reject" onclick="rejectBiz('${b.id}')">Reject</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function renderLeads(leads) {
+    const tbody = document.querySelectorAll('.content-card table tbody')[1];
+    if (!tbody) return;
+    const recent = leads.slice(-4).reverse();
+    if (!recent.length) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--gray)">No leads yet</td></tr>';
+      return;
+    }
+    tbody.innerHTML = recent.map(l => `
+      <tr>
+        <td class="biz-name-cell">${l.business || '-'}</td>
+        <td><span class="stat-card-badge ${l.type === 'call' ? 'badge-blue' : 'badge-green'}">${l.type === 'call' ? 'Call' : 'WhatsApp'}</span></td>
+        <td style="color:var(--gray);font-size:12px">${l.time ? new Date(l.time.seconds * 1000).toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'}) : 'Just now'}</td>
+      </tr>
+    `).join('');
+  }
+
+  window.approveBiz = async function(id) {
+    await updateDoc(doc(db, 'businesses', id), { status: 'approved' });
+    loadDashboard();
+  };
+
+  window.rejectBiz = async function(id) {
+    if (confirm('এই business reject করবেন?')) {
+      await deleteDoc(doc(db, 'businesses', id));
+      loadDashboard();
+    }
+  };
 </script>
 </body>
 </html>
