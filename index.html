@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConnectBazar.in – India's Local Business Marketplace</title>
+  <meta name="description" content="ConnectBazar.in helps local shops, services and businesses create a free profile, get calls, WhatsApp leads, offers, reviews and marketing support." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #1a6bfa;
+      --blue-dark: #0f4fd6;
+      --blue-light: #e8f0ff;
+      --orange: #ff6b2b;
+      --orange-light: #fff1eb;
+      --green: #00a86b;
+      --green-light: #e6f9f2;
+      --dark: #0d1117;
+      --dark2: #1c2230;
+      --gray: #64748b;
+      --gray2: #94a3b8;
+      --light: #f8faff;
+      --border: #e2e8f4;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 16px rgba(15,30,80,.08), 0 1px 4px rgba(15,30,80,.04);
+      --shadow-lg: 0 12px 40px rgba(15,30,80,.12), 0 3px 10px rgba(15,30,80,.06);
+      --radius-sm: 10px;
+      --radius: 16px;
+      --radius-lg: 24px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', Arial, sans-serif; color: var(--dark); background: #fff; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; }
+    .wrap { width: min(1160px, 90%); margin: 0 auto; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      height: 72px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800; font-size: 22px; letter-spacing: -0.5px;
+    }
+    .logo-mark {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue) 0%, #5b9bff 100%);
+      display: grid; place-items: center;
+      font-weight: 900; font-size: 15px; color: #fff; letter-spacing: -0.5px;
+    }
+    .logo-text { color: var(--dark); }
+    .logo-text span { color: var(--orange); }
+    nav { display: flex; gap: 32px; align-items: center; }
+    nav a { font-size: 14px; font-weight: 600; color: var(--gray); transition: color .15s; }
+    nav a:hover { color: var(--dark); }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue); color: #fff;
+      font-size: 14px; font-weight: 700;
+      padding: 11px 20px; border-radius: var(--radius-sm);
+      border: none; cursor: pointer;
+      transition: background .15s, transform .1s;
+      font-family: inherit;
+    }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--dark); font-size: 22px; line-height: 1; }
+    .mobile-nav { display: none; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, #f0f5ff 0%, #fff 50%, #fff8f4 100%);
+      padding: 64px 0 80px;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue-light); color: var(--blue);
+      font-size: 12px; font-weight: 700; letter-spacing: .3px;
+      padding: 6px 14px; border-radius: 999px;
+      margin-bottom: 20px; border: 1px solid rgba(26,107,250,.15);
+    }
+    .hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 52px; font-weight: 800;
+      line-height: 1.08; letter-spacing: -2px;
+      margin-bottom: 18px; color: var(--dark);
+    }
+    .hero h1 .accent { color: var(--blue); }
+    .hero h1 .accent2 { color: var(--orange); }
+    .hero-sub {
+      font-size: 17px; line-height: 1.7; color: var(--gray);
+      max-width: 520px; margin-bottom: 32px;
+    }
+    .hero-form {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 8px 8px 18px;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: var(--shadow-lg);
+      max-width: 520px; margin-bottom: 28px;
+    }
+    .hero-form .flag {
+      display: flex; align-items: center; gap: 6px;
+      font-weight: 700; font-size: 15px; white-space: nowrap;
+      border-right: 1px solid var(--border); padding-right: 12px; margin-right: 4px;
+    }
+    .hero-form input {
+      flex: 1; border: none; outline: none;
+      font-size: 16px; font-family: inherit; color: var(--dark);
+      background: transparent; min-width: 0;
+    }
+    .hero-form input::placeholder { color: var(--gray2); }
+    .hero-checks {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .hero-check {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 15px; font-weight: 600; color: var(--dark2);
+    }
+    .check-dot {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--green-light);
+      display: grid; place-items: center;
+      flex-shrink: 0;
+    }
+    .check-dot svg { width: 13px; height: 13px; }
+
+    /* Hero visual */
+    .hero-visual { position: relative; display: flex; justify-content: center; }
+    .phone-frame {
+      width: 280px; background: var(--dark); border-radius: 42px;
+      padding: 20px 14px; box-shadow: 0 32px 80px rgba(13,17,23,.35), 0 0 0 1px rgba(255,255,255,.05);
+      position: relative; z-index: 2;
+    }
+    .phone-screen {
+      background: #f8faff; border-radius: 28px;
+      overflow: hidden; min-height: 460px; padding: 16px;
+    }
+    .phone-bar {
+      background: #fff; border-radius: 10px; padding: 9px 12px;
+      font-size: 12px; color: var(--gray); border: 1px solid var(--border);
+      display: flex; align-items: center; gap: 6px; margin-bottom: 12px;
+    }
+    .phone-card {
+      background: #fff; border-radius: 14px;
+      border: 1px solid var(--border); padding: 12px;
+      margin-bottom: 10px; box-shadow: var(--shadow-sm);
+    }
+    .phone-thumb {
+      height: 72px; border-radius: 10px;
+      background: linear-gradient(135deg, #dbeafe, #ede9fe);
+      margin-bottom: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+    }
+    .phone-biz { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .phone-tag { font-size: 11px; color: var(--gray2); }
+    .phone-actions { display: flex; gap: 6px; margin-top: 8px; }
+    .phone-btn {
+      flex: 1; text-align: center; padding: 6px; border-radius: 8px;
+      font-size: 11px; font-weight: 700;
+    }
+    .phone-btn.call { background: var(--blue-light); color: var(--blue); }
+    .phone-btn.wa { background: var(--green-light); color: var(--green); }
+    .phone-rating { font-size: 11px; color: var(--green); font-weight: 700; background: var(--green-light); padding: 3px 7px; border-radius: 6px; display: inline-block; margin-bottom: 4px; }
+
+    .float-card {
+      position: absolute;
+      background: #fff; border-radius: var(--radius);
+      padding: 14px 18px; box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+    .float-card.stat-card { top: 30px; right: -28px; min-width: 140px; }
+    .float-card.biz-card { bottom: 70px; left: -36px; max-width: 210px; }
+    .float-card.cats-card { bottom: 20px; right: -20px; }
+    .stat-num { font-size: 24px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--dark); }
+    .stat-label { font-size: 12px; color: var(--gray); font-weight: 500; }
+    .avatar-row { display: flex; margin-bottom: 6px; }
+    .avatar { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; background: linear-gradient(135deg, #93c5fd, #c4b5fd); margin-right: -8px; font-size: 10px; display: grid; place-items: center; font-weight: 700; color: #fff; }
+
+    /* ── SECTIONS COMMON ── */
+    section { padding: 72px 0; }
+    .section-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 1.2px;
+      color: var(--blue); text-transform: uppercase; margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 34px; font-weight: 800;
+      letter-spacing: -1px; color: var(--dark); margin-bottom: 10px;
+    }
+    .section-sub { font-size: 16px; color: var(--gray); max-width: 540px; line-height: 1.65; }
+    .section-head { margin-bottom: 44px; }
+    .section-head.center { text-align: center; }
+    .section-head.center .section-sub { margin: 0 auto; }
+
+    /* ── CATEGORIES ── */
+    .cats-bg { background: var(--light); }
+    .cats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .cat-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px;
+      transition: all .2s; cursor: pointer;
+    }
+    .cat-card:hover { border-color: var(--blue); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .cat-icon { font-size: 36px; margin-bottom: 12px; }
+    .cat-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--dark); }
+    .cat-desc { font-size: 13px; color: var(--gray); }
+    .cat-count { font-size: 12px; color: var(--blue); font-weight: 600; margin-top: 8px; }
+
+    /* ── BUSINESSES ── */
+    .biz-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .biz-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all .2s;
+    }
+    .biz-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .biz-banner {
+      height: 140px; display: flex; align-items: center; justify-content: center;
+      font-size: 44px;
+    }
+    .biz-banner.b1 { background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%); }
+    .biz-banner.b2 { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+    .biz-banner.b3 { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); }
+    .biz-banner.b4 { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); }
+    .biz-body { padding: 16px; }
+    .biz-verified {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 700; color: var(--green);
+      background: var(--green-light); padding: 3px 8px; border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .biz-name { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .biz-desc { font-size: 13px; color: var(--gray); line-height: 1.5; margin-bottom: 14px; }
+    .biz-actions { display: flex; gap: 8px; }
+    .biz-btn {
+      flex: 1; text-align: center; padding: 9px;
+      border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;
+      transition: background .15s;
+    }
+    .biz-btn.call { background: var(--blue-light); color: var(--blue); }
+    .biz-btn.call:hover { background: #d0e4ff; }
+    .biz-btn.wa { background: var(--green-light); color: var(--green); }
+    .biz-btn.wa:hover { background: #c0f0e0; }
+
+    /* ── FEATURES ── */
+    .features-bg {
+      background: var(--dark2);
+      color: #fff;
+    }
+    .features-bg .section-label { color: #7eb8ff; }
+    .features-bg .section-title { color: #fff; }
+    .features-bg .section-sub { color: #94a3b8; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius); padding: 28px 24px;
+      transition: background .2s;
+    }
+    .feature-card:hover { background: rgba(255,255,255,.08); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center; font-size: 22px;
+      margin-bottom: 18px;
+    }
+    .feature-icon.blue { background: rgba(26,107,250,.25); }
+    .feature-icon.green { background: rgba(0,168,107,.25); }
+    .feature-icon.orange { background: rgba(255,107,43,.25); }
+    .feature-title { font-size: 17px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; }
+    .feature-desc { font-size: 14px; color: #94a3b8; line-height: 1.65; }
+
+    /* ── REGISTER ── */
+    .register-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .register-info .section-title { margin-bottom: 16px; }
+    .register-checks { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+    .register-check { display: flex; align-items: flex-start; gap: 12px; }
+    .reg-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--blue-light); display: grid; place-items: center; flex-shrink: 0; font-size: 18px; }
+    .reg-check-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .reg-check-desc { font-size: 13px; color: var(--gray); }
+    .form-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px;
+      box-shadow: var(--shadow-lg);
+    }
+    .form-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px; font-weight: 800; margin-bottom: 24px;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--dark2); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px; font-family: inherit;
+      color: var(--dark); background: #fff;
+      transition: border-color .15s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--blue); }
+    .form-group.full { grid-column: 1/-1; }
+    .form-group textarea { min-height: 90px; resize: vertical; }
+    .form-group select { appearance: none; cursor: pointer; }
+    .form-submit {
+      grid-column: 1/-1;
+      padding: 14px;
+      background: var(--blue); color: #fff;
+      font-size: 15px; font-weight: 700;
+      border: none; border-radius: var(--radius-sm);
+      cursor: pointer; font-family: inherit;
+      transition: background .15s, transform .1s;
+    }
+    .form-submit:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    /* ── PLANS ── */
+    .plans-bg { background: var(--light); }
+    .plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .plan-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 24px;
+      position: relative;
+    }
+    .plan-card.popular {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,107,250,.12);
+    }
+    .plan-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--blue); color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+      padding: 4px 14px; border-radius: 99px; white-space: nowrap;
+    }
+    .plan-name { font-size: 14px; font-weight: 700; color: var(--gray); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+    .plan-price {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 40px; font-weight: 800; color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .plan-price sup { font-size: 20px; vertical-align: super; }
+    .plan-price span { font-size: 16px; font-weight: 500; color: var(--gray); }
+    .plan-desc { font-size: 14px; color: var(--gray); line-height: 1.6; margin-bottom: 20px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .plan-feature {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; color: var(--dark2);
+    }
+    .pf-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--green-light); display: grid; place-items: center; flex-shrink: 0; font-size: 10px; color: var(--green); font-weight: 900; }
+
+    /* ── FAQS ── */
+    .faqs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .faq-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+    }
+    .faq-q { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+    .faq-num { min-width: 28px; height: 28px; border-radius: 8px; background: var(--blue-light); color: var(--blue); font-size: 12px; font-weight: 800; display: grid; place-items: center; margin-top: -1px; }
+    .faq-a { font-size: 14px; color: var(--gray); line-height: 1.65; padding-left: 38px; }
+
+    /* ── STATS BAR ── */
+    .stats-bar { background: var(--blue); color: #fff; padding: 20px 0; }
+    .stats-inner { display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+    .stat-item { text-align: center; }
+    .stat-big { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 30px; font-weight: 800; }
+    .stat-small { font-size: 13px; opacity: .75; font-weight: 500; margin-top: 2px; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--dark); color: #94a3b8; padding: 48px 0 32px; }
+    .footer-inner { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand .logo { margin-bottom: 14px; }
+    .footer-brand p { font-size: 14px; line-height: 1.7; }
+    .footer-col h4 { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 14px; text-transform: uppercase; letter-spacing: .5px; }
+    .footer-col a { display: block; font-size: 14px; color: #94a3b8; margin-bottom: 8px; transition: color .15s; }
+    .footer-col a:hover { color: #e2e8f0; }
+    .footer-bottom { border-top: 1px solid #1e2d45; padding-top: 24px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+    .footer-logo-text { color: #e2e8f0; }
+    .footer-logo-text span { color: var(--orange); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { display: none; }
+      .hamburger { display: block; }
+      .mobile-nav.open {
+        display: flex; flex-direction: column; gap: 0;
+        position: absolute; top: 72px; left: 0; right: 0;
+        background: #fff; border-bottom: 1px solid var(--border);
+        z-index: 200;
+      }
+      .mobile-nav a {
+        display: block; padding: 14px 24px;
+        font-size: 15px; font-weight: 600; color: var(--dark);
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-visual { min-height: auto; margin-top: 8px; }
+      .phone-frame { width: 240px; }
+      .float-card { display: none; }
+      .hero h1 { font-size: 38px; }
+      .cats-grid, .biz-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .register-grid { grid-template-columns: 1fr; gap: 40px; }
+      .plans-grid { grid-template-columns: 1fr; }
+      .faqs-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+      .stats-inner { gap: 24px 40px; }
+    }
+    @media (max-width: 560px) {
+      .hero { padding: 40px 0 56px; }
+      .hero h1 { font-size: 30px; letter-spacing: -1px; }
+      .hero-form { flex-direction: column; align-items: stretch; padding: 12px; }
+      .hero-form .flag { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 10px; padding-right: 0; margin-right: 0; }
+      .cats-grid { grid-template-columns: repeat(2, 1fr); }
+      .biz-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      section { padding: 52px 0; }
+      .section-title { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap nav">
+    <a href="/" class="logo">
+      <div class="logo-mark">CB</div>
+      <span class="logo-text">Connect<span>Bazar</span>.in</span>
+    </a>
+    <nav>
+      <a href="#categories">Categories</a>
+      <a href="#businesses">Businesses</a>
+      <a href="#features">Features</a>
+      <a href="#plans">Plans</a>
+      <a href="#faqs">FAQs</a>
+    </nav>
+    <a href="#register" class="btn-primary">Add Your Business</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#categories" onclick="closeMenu()">Categories</a>
+    <a href="#businesses" onclick="closeMenu()">Businesses</a>
+    <a href="#features" onclick="closeMenu()">Features</a>
+    <a href="#plans" onclick="closeMenu()">Plans</a>
+    <a href="#faqs" onclick="closeMenu()">FAQs</a>
+    <a href="#register" onclick="closeMenu()" style="color:var(--blue);">Add Your Business →</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="badge-pill">🚀 100% Free Business Registration</div>
+      <h1>
+        Grow your <span class="accent">local business</span> with <span class="accent2">ConnectBazar</span>
+      </h1>
+      <p class="hero-sub">
+        India's trusted marketplace for local shops, service providers and professionals. Get calls, WhatsApp enquiries, customer leads and online visibility — completely free.
+      </p>
+      <div class="hero-form">
+        <div class="flag"><span>🇮🇳</span> +91</div>
+        <input type="tel" placeholder="Enter your mobile number" maxlength="10" />
+        <a href="#register" class="btn-primary">Get Started →</a>
+      </div>
+      <div class="hero-checks">
+        <div class="hero-check">
+          <div class="check-dot">
+            <svg viewBox="0 0 13 13" fill="none"><path d="M2 7L5.5 10.5L11 3" stroke="#00a86b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          Free business profile with mini website
+        </div>
+        <div class="hero-check">
+          <div class="check-dot">
+            <svg viewBox="0 0 13 13" fill="none"><path d="M2 7L5.5 10.5L11 3" stroke="#00a86b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          Instant customer calls and WhatsApp leads
+        </div>
+        <div class="hero-check">
+          <div class="check-dot">
+            <svg viewBox="0 0 13 13" fill="none"><path d="M2 7L5.5 10.5L11 3" stroke="#00a86b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          Track enquiries, offers and reviews in one place
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-bar">🔎 Search businesses near you</div>
+          <div class="phone-card">
+            <div class="phone-thumb">🖨️</div>
+            <span class="phone-rating">4.8 ★ Verified</span>
+            <div class="phone-biz">Tech CND Copier Solution</div>
+            <div class="phone-tag">Copier Service · Patna</div>
+            <div class="phone-actions">
+              <div class="phone-btn call">📞 Call</div>
+              <div class="phone-btn wa">💬 WhatsApp</div>
+            </div>
+          </div>
+          <div class="phone-card">
+            <div class="phone-thumb">📱</div>
+            <span class="phone-rating">4.6 ★</span>
+            <div class="phone-biz">Royal Mobile Store</div>
+            <div class="phone-tag">Mobile Shop · Patna</div>
+            <div class="phone-actions">
+              <div class="phone-btn call">📞 Call</div>
+              <div class="phone-btn wa">💬 Lead</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="float-card stat-card">
+        <div class="avatar-row">
+          <div class="avatar">R</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#6ee7b7,#34d399)">S</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#fca5a5,#f87171)">M</div>
+        </div>
+        <div class="stat-num">10,000+</div>
+        <div class="stat-label">Local businesses listed</div>
+      </div>
+      <div class="float-card biz-card">
+        <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px;">YOUR BUSINESS GETS</div>
+        <div style="font-size:13px;color:var(--dark2);line-height:1.6;">Profile page · Call button · WhatsApp · Offers section · Reviews</div>
+      </div>
+      <div class="float-card cats-card">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Categories</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="wrap stats-inner">
+    <div class="stat-item">
+      <div class="stat-big">10,000+</div>
+      <div class="stat-small">Businesses Listed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-big">50+</div>
+      <div class="stat-small">Categories</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-big">100%</div>
+      <div class="stat-small">Free Registration</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-big">24h</div>
+      <div class="stat-small">Approval Time</div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section id="categories" class="cats-bg">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-label">Browse By Category</div>
+      <h2 class="section-title">Popular Business Categories</h2>
+      <p class="section-sub">Find trusted local businesses across all major service categories in your city.</p>
+    </div>
+    <div class="cats-grid">
+      <div class="cat-card">
+        <div class="cat-icon">🏥</div>
+        <div class="cat-name">Doctors & Clinics</div>
+        <div class="cat-desc">General, specialist and dental care</div>
+        <div class="cat-count">240+ listed</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🖨️</div>
+        <div class="cat-name">Copier Service</div>
+        <div class="cat-desc">Sales, repair and rental</div>
+        <div class="cat-count">80+ listed</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">📱</div>
+        <div class="cat-name">Mobile Shops</div>
+        <div class="cat-desc">Phones, accessories and repair</div>
+        <div class="cat-count">300+ listed</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🧾</div>
+        <div class="cat-name">CSC Services</div>
+        <div class="cat-desc">Online citizen and e-gov services</div>
+        <div class="cat-count">150+ listed</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">⚡</div>
+        <div class="cat-name">Electricians</div>
+        <div class="cat-desc">Home, shop and industrial repair</div>
+        <div class="cat-count">120+ listed</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🍽️</div>
+        <div class="cat-name">Restaurants</div>
+        <div class="cat-desc">Dine-in, takeaway and delivery</div>
+        <div class="cat-count">500+ listed</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🎓</div>
+        <div class="cat-name">Tutors & Coaching</div>
+        <div class="cat-desc">All subjects, all boards</div>
+        <div class="cat-count">180+ listed</div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🏪</div>
+        <div class="cat-name">Grocery Stores</div>
+        <div class="cat-desc">Daily needs and provisions</div>
+        <div class="cat-count">600+ listed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED BUSINESSES -->
+<section id="businesses">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-label">Featured Listings</div>
+      <h2 class="section-title">Trusted Local Businesses</h2>
+      <p class="section-sub">Verified and reviewed businesses from your community — ready to serve you.</p>
+    </div>
+    <div class="biz-grid">
+      <div class="biz-card">
+        <div class="biz-banner b1">🖨️</div>
+        <div class="biz-body">
+          <div class="biz-verified">✓ Verified</div>
+          <div class="biz-name">Tech CND Copier Solution</div>
+          <div class="biz-desc">Canon copier sales, service and genuine spare parts. Expert technicians available.</div>
+          <div class="biz-actions">
+            <a class="biz-btn call" href="tel:+919735474770">📞 Call Now</a>
+            <a class="biz-btn wa" href="https://wa.me/919735474770">💬 WhatsApp</a>
+          </div>
+        </div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-banner b2">💻</div>
+        <div class="biz-body">
+          <div class="biz-verified">✓ Verified</div>
+          <div class="biz-name">Digital Agency by Chandan Das</div>
+          <div class="biz-desc">Website, app, poster design and full digital marketing services for local businesses.</div>
+          <div class="biz-actions">
+            <a class="biz-btn call" href="tel:+919735474770">📞 Call Now</a>
+            <a class="biz-btn wa" href="https://wa.me/919735474770">💬 WhatsApp</a>
+          </div>
+        </div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-banner b3">📄</div>
+        <div class="biz-body">
+          <div class="biz-verified">✓ Verified</div>
+          <div class="biz-name">Local Xerox Center</div>
+          <div class="biz-desc">Printing, scanning, lamination and online form filling services at low rates.</div>
+          <div class="biz-actions">
+            <a class="biz-btn call" href="#">📞 Call Now</a>
+            <a class="biz-btn wa" href="#">💬 WhatsApp</a>
+          </div>
+        </div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-banner b4">📱</div>
+        <div class="biz-body">
+          <div class="biz-verified">✓ Verified</div>
+          <div class="biz-name">Royal Mobile Store</div>
+          <div class="biz-desc">Mobiles, accessories, screen replacement and all mobile repair services.</div>
+          <div class="biz-actions">
+            <a class="biz-btn call" href="#">📞 Call Now</a>
+            <a class="biz-btn wa" href="#">💬 WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-bg">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="section-label">Why ConnectBazar</div>
+      <h2 class="section-title">Everything your business needs to grow online</h2>
+      <p class="section-sub">A complete toolkit for local businesses to attract customers, manage leads and build a strong online presence.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon blue">🌐</div>
+        <div class="feature-title">Free Mini Website</div>
+        <div class="feature-desc">Every registered business gets a dedicated profile page with photos, services, offers, location map and contact buttons.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">📥</div>
+        <div class="feature-title">Direct Lead Generation</div>
+        <div class="feature-desc">Customers can send enquiries, call directly or reach you on WhatsApp — all from one page, all routed to you instantly.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon orange">📣</div>
+        <div class="feature-title">Marketing Support</div>
+        <div class="feature-desc">Upgrade to get Google Business setup, poster design, social media management and SEO — all handled for you.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">⭐</div>
+        <div class="feature-title">Reviews & Ratings</div>
+        <div class="feature-desc">Build trust with verified customer reviews. A strong rating helps you stand out and win more business locally.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">🎯</div>
+        <div class="feature-title">Offers & Promotions</div>
+        <div class="feature-desc">Publish limited-time offers, discounts and deals right on your profile. Attract more customers with timely promotions.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon orange">📊</div>
+        <div class="feature-title">Enquiry Dashboard</div>
+        <div class="feature-desc">Track all calls, WhatsApp messages and enquiry leads from your business dashboard. Never miss a customer again.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="wrap register-grid">
+    <div class="register-info">
+      <div class="section-label">Add Your Business</div>
+      <h2 class="section-title">List your business for free in minutes</h2>
+      <p class="section-sub">Submit your details once — our team reviews and approves your listing within 24 hours, keeping the platform clean and trusted.</p>
+      <div class="register-checks">
+        <div class="register-check">
+          <div class="reg-icon">🆓</div>
+          <div>
+            <div class="reg-check-title">No listing fee, ever</div>
+            <div class="reg-check-desc">Basic profile is completely free. Upgrade only when you want faster growth.</div>
+          </div>
+        </div>
+        <div class="register-check">
+          <div class="reg-icon">✅</div>
+          <div>
+            <div class="reg-check-title">Fast admin approval</div>
+            <div class="reg-check-desc">Most listings are approved within 24 hours of submission.</div>
+          </div>
+        </div>
+        <div class="register-check">
+          <div class="reg-icon">📈</div>
+          <div>
+            <div class="reg-check-title">Upgrade for more visibility</div>
+            <div class="reg-check-desc">Featured listing and marketing support available as paid upgrades.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-card">
+      <h3>Register Your Business</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Business Name *</label>
+          <input type="text" placeholder="e.g. Tech CND Copier Solution" />
+        </div>
+        <div class="form-group">
+          <label>Owner Name *</label>
+          <input type="text" placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label>Mobile Number *</label>
+          <input type="tel" placeholder="+91 98765 43210" />
+        </div>
+        <div class="form-group">
+          <label>WhatsApp Number</label>
+          <input type="tel" placeholder="+91 98765 43210" />
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select>
+            <option value="">Select category…</option>
+            <option>Doctor / Clinic</option>
+            <option>Copier Service</option>
+            <option>Mobile Shop</option>
+            <option>CSC Service</option>
+            <option>Electrician</option>
+            <option>Restaurant</option>
+            <option>Tutor / Coaching</option>
+            <option>Grocery Store</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>City / Area *</label>
+          <input type="text" placeholder="e.g. Patna, Bihar" />
+        </div>
+        <div class="form-group full">
+          <label>Business Description</label>
+          <textarea placeholder="Describe your services, specialisations and experience…"></textarea>
+        </div>
+        <button class="form-submit" type="button">Submit Free Listing →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section id="plans" class="plans-bg">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, transparent plans</h2>
+      <p class="section-sub">Registration is always free. Paid plans give you more visibility and marketing support to grow faster.</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="plan-name">Free Listing</div>
+        <div class="plan-price">₹0</div>
+        <div class="plan-desc">Get started with a free business profile that's visible to customers searching your category.</div>
+        <ul class="plan-features">
+          <li class="plan-feature"><div class="pf-dot">✓</div> Business profile page</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Call & WhatsApp button</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Location on map</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Customer reviews</li>
+        </ul>
+      </div>
+      <div class="plan-card popular">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-name">Featured Listing</div>
+        <div class="plan-price"><sup>₹</sup>499<span>/mo</span></div>
+        <div class="plan-desc">Get top placement in search results, highlighted profile and offer section to attract more customers.</div>
+        <ul class="plan-features">
+          <li class="plan-feature"><div class="pf-dot">✓</div> Everything in Free</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Top search placement</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Highlighted profile badge</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Offers & promotions</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Priority support</li>
+        </ul>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Marketing Support</div>
+        <div class="plan-price" style="font-size:28px">Custom</div>
+        <div class="plan-desc">Full digital marketing package — Google Business, social media, SEO, poster design and more.</div>
+        <ul class="plan-features">
+          <li class="plan-feature"><div class="pf-dot">✓</div> Everything in Featured</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Google Business setup</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Social media management</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> Custom poster design</li>
+          <li class="plan-feature"><div class="pf-dot">✓</div> SEO optimisation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQS -->
+<section id="faqs">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="section-label">FAQs</div>
+      <h2 class="section-title">Common questions</h2>
+      <p class="section-sub">Everything you need to know about listing your business on ConnectBazar.</p>
+    </div>
+    <div class="faqs-grid">
+      <div class="faq-card">
+        <div class="faq-q"><div class="faq-num">1</div>Is business registration really free?</div>
+        <div class="faq-a">Yes, completely. Local business owners can register and maintain a profile on ConnectBazar at no cost — no hidden charges, no credit card required.</div>
+      </div>
+      <div class="faq-card">
+        <div class="faq-q"><div class="faq-num">2</div>How do customers contact my business?</div>
+        <div class="faq-a">Customers can call you directly, send a WhatsApp message, or submit an enquiry — all from your profile page with one tap.</div>
+      </div>
+      <div class="faq-card">
+        <div class="faq-q"><div class="faq-num">3</div>How long does approval take?</div>
+        <div class="faq-a">Most listings are reviewed and approved within 24 hours. Admin verification keeps the platform trusted and spam-free.</div>
+      </div>
+      <div class="faq-card">
+        <div class="faq-q"><div class="faq-num">4</div>Can I earn money from ConnectBazar?</div>
+        <div class="faq-a">Yes. You can earn through featured listing fees, marketing service packages, and by referring other businesses to the platform.</div>
+      </div>
+      <div class="faq-card">
+        <div class="faq-q"><div class="faq-num">5</div>Is the admin panel publicly visible?</div>
+        <div class="faq-a">No. The admin panel is in a separate hidden folder, protected by PIN and blocked from all search engines via robots.txt.</div>
+      </div>
+      <div class="faq-card">
+        <div class="faq-q"><div class="faq-num">6</div>Can I upgrade my listing later?</div>
+        <div class="faq-a">Absolutely. Start free and upgrade to a Featured Listing or Marketing Support plan whenever you're ready to grow faster.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo" style="margin-bottom:14px">
+          <div class="logo-mark">CB</div>
+          <span class="footer-logo-text">Connect<span>Bazar</span>.in</span>
+        </div>
+        <p>India's trusted local business marketplace. Free listing, real leads and marketing support for shops, services and professionals across India.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#categories">Browse Categories</a>
+        <a href="#businesses">Featured Businesses</a>
+        <a href="#register">Add Your Business</a>
+        <a href="#plans">Pricing Plans</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About ConnectBazar</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 ConnectBazar.in — All rights reserved.</div>
+      <div>Made with ❤️ for local businesses across India</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileNav').classList.remove('open');
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>
