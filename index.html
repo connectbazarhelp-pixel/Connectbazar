@@ -852,11 +852,11 @@
       <div class="form-grid">
         <div class="auth-box">
           <div class="auth-title">Seller Account Login</div>
-          <div class="auth-note">Business submit করার আগে seller account login করলে owner UID Firebase-এ save হবে। Email/Password enabled আছে, Google Login enable করলে Google button-ও কাজ করবে।</div>
+          <div class="auth-note">Business submit করার আগে mobile number দিয়ে seller account create/login করুন। আপনার mobile number Firebase Auth-এ secure email format হিসেবে save হবে।</div>
           <div class="auth-actions">
             <button class="auth-btn primary" type="button" id="googleLoginBtn">🔐 Continue with Google</button>
-            <button class="auth-btn" type="button" id="emailSignupBtn">✉️ Create Email Account</button>
-            <button class="auth-btn" type="button" id="emailLoginBtn">Login with Email</button>
+            <button class="auth-btn" type="button" id="emailSignupBtn">📱 Create Mobile Account</button>
+            <button class="auth-btn" type="button" id="emailLoginBtn">Login with Mobile</button>
             <button class="auth-btn" type="button" id="logoutBtn" style="display:none">Logout</button>
           </div>
           <div class="auth-user" id="authUserBox"></div>
@@ -1071,7 +1071,7 @@
     currentUser = user;
     const logoutBtn = document.getElementById('logoutBtn');
     if (user) {
-      showAuthStatus(`Logged in: ${user.email || user.displayName || user.uid}`);
+      showAuthStatus(`Logged in: ${formatSellerLogin(user.email) || user.displayName || user.uid}`);
       if(logoutBtn) logoutBtn.style.display = 'inline-block';
     } else {
       const box = document.getElementById('authUserBox');
@@ -1089,16 +1089,45 @@
     }
   });
 
+  function mobileToSellerEmail(mobile){
+    const digits = String(mobile || '').replace(/\D/g, '').slice(-10);
+    if (digits.length !== 10) return '';
+    return `${digits}@connectbazar.in`;
+  }
+
+  function formatSellerLogin(email){
+    if (!email) return '';
+    const suffix = '@connectbazar.in';
+    if (email.endsWith(suffix)) return `Mobile: ${email.replace(suffix, '')}`;
+    return email;
+  }
+
   async function askEmailPassword(mode){
-    const email = prompt('Seller email দিন:');
-    if(!email) return;
+    const mobile = prompt('Seller mobile number দিন (10 digit):');
+    const email = mobileToSellerEmail(mobile);
+    if(!email) {
+      showAuthStatus('সঠিক 10 digit mobile number দিন।', false);
+      return;
+    }
     const password = prompt('Password দিন — minimum 6 characters:');
     if(!password) return;
+    if(password.length < 6){
+      showAuthStatus('Password কমপক্ষে 6 characters হতে হবে।', false);
+      return;
+    }
     try {
-      if(mode === 'signup') await createUserWithEmailAndPassword(auth, email, password);
-      else await signInWithEmailAndPassword(auth, email, password);
+      if(mode === 'signup') {
+        await createUserWithEmailAndPassword(auth, email, password);
+        showAuthStatus(`Mobile account created: ${email.replace('@connectbazar.in','')}`);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        showAuthStatus(`Logged in with mobile: ${email.replace('@connectbazar.in','')}`);
+      }
     } catch(e) {
-      showAuthStatus(e.message || 'Authentication error', false);
+      let msg = e.message || 'Authentication error';
+      if (e.code === 'auth/email-already-in-use') msg = 'এই mobile number দিয়ে account আগে থেকেই আছে। Login with Mobile চাপুন।';
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') msg = 'Mobile number বা password ভুল। আগে account না থাকলে Create Mobile Account করুন।';
+      showAuthStatus(msg, false);
       console.error(e);
     }
   }
@@ -1126,7 +1155,8 @@
       status: 'pending',
       submittedAt: serverTimestamp(),
       ownerUid: currentUser ? currentUser.uid : null,
-      ownerEmail: currentUser ? (currentUser.email || '') : ''
+      ownerEmail: currentUser ? (currentUser.email || '') : '',
+      ownerMobile: currentUser && currentUser.email ? currentUser.email.replace('@connectbazar.in','') : ''
     };
 
     const statusBox = document.getElementById('formStatus');
