@@ -913,11 +913,7 @@
         <div class="faq-a">Yes. You can earn through featured listing fees, marketing service packages, and by referring other businesses to the platform.</div>
       </div>
       <div class="faq-card">
-        <div class="faq-q"><div class="faq-num">5</div>Is the admin panel publicly visible?</div>
-        <div class="faq-a">No. The admin panel is in a separate hidden folder, protected by PIN and blocked from all search engines via robots.txt.</div>
-      </div>
-      <div class="faq-card">
-        <div class="faq-q"><div class="faq-num">6</div>Can I upgrade my listing later?</div>
+        <div class="faq-q"><div class="faq-num">5</div>Can I upgrade my listing later?</div>
         <div class="faq-a">Absolutely. Start free and upgrade to a Featured Listing or Marketing Support plan whenever you're ready to grow faster.</div>
       </div>
     </div>
@@ -957,13 +953,80 @@
   </div>
 </footer>
 
-<script>
-  function toggleMenu() {
-    document.getElementById('mobileNav').classList.toggle('open');
-  }
-  function closeMenu() {
-    document.getElementById('mobileNav').classList.remove('open');
-  }
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxXP8asrvUVPxWUBQ3NFhVW38UGeFTKZ8",
+    authDomain: "connectbazar-893fc.firebaseapp.com",
+    projectId: "connectbazar-893fc",
+    storageBucket: "connectbazar-893fc.firebasestorage.app",
+    messagingSenderId: "908554431469",
+    appId: "1:908554431469:web:6ad9cfc134431b2af255e4",
+    measurementId: "G-EBGY7XJVF9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Form submit
+  document.querySelector('.form-submit').addEventListener('click', async () => {
+    const inputs = document.querySelectorAll('.form-grid input, .form-grid select, .form-grid textarea');
+    const data = {
+      businessName: inputs[0].value.trim(),
+      ownerName: inputs[1].value.trim(),
+      mobile: inputs[2].value.trim(),
+      whatsapp: inputs[3].value.trim(),
+      category: inputs[4].value,
+      city: inputs[5].value.trim(),
+      description: inputs[6].value.trim(),
+      status: 'pending',
+      submittedAt: serverTimestamp()
+    };
+
+    if (!data.businessName || !data.mobile || !data.category) {
+      alert('Business name, mobile number এবং category দিন।');
+      return;
+    }
+
+    const btn = document.querySelector('.form-submit');
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+
+    try {
+      await addDoc(collection(db, 'businesses'), data);
+      btn.textContent = '✓ Submitted! We will review within 24 hours.';
+      btn.style.background = '#00a86b';
+      inputs.forEach(i => i.value = '');
+    } catch (e) {
+      btn.textContent = 'Error! Try again.';
+      btn.style.background = '#e53e3e';
+      btn.disabled = false;
+      console.error(e);
+    }
+  });
+
+  // Track Call/WhatsApp clicks
+  document.querySelectorAll('.biz-btn.call, .biz-btn.wa').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const card = e.target.closest('.biz-card');
+      const bizName = card.querySelector('.biz-name')?.textContent || 'Unknown';
+      const type = e.target.classList.contains('call') ? 'call' : 'whatsapp';
+      try {
+        await addDoc(collection(db, 'leads'), {
+          business: bizName,
+          type,
+          time: serverTimestamp()
+        });
+      } catch(err) {}
+    });
+  });
+
+  // Mobile menu
+  window.toggleMenu = () => document.getElementById('mobileNav').classList.toggle('open');
+  window.closeMenu = () => document.getElementById('mobileNav').classList.remove('open');
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
